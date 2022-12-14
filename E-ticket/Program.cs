@@ -1,4 +1,5 @@
 using E_ticket.Data;
+using E_ticket.Data.Cart;
 using E_ticket.Data.Repository;
 using E_ticket.Data.Services;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IActorsService, ActorsService>();
 builder.Services.AddScoped<IProducersService,ProducersService>();
 builder.Services.AddScoped<ICinemasService,CinemasService>();
+builder.Services.AddScoped<IMoviesService,MoviesService>();
+builder.Services.AddScoped<IOrdersService, OrdersService>();
+//configure session
+builder.Services.AddSingleton<IHttpContextAccessor,HttpContextAccessor>();
+builder.Services.AddScoped(sc => ShoppingCart.GetShoppingCart(sc));
 
+builder.Services.AddSession();
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options=>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -32,6 +39,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 // initialize seed data
 AppDbInitializer.Seed(app);
 

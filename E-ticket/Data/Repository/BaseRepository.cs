@@ -1,6 +1,7 @@
 ﻿using E_ticket.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Linq.Expressions;
 
 namespace E_ticket.Data.Repository
 {
@@ -36,6 +37,13 @@ namespace E_ticket.Data.Repository
             EntityEntry entry= _context.Entry<T>(entity);
             entry.State =  EntityState.Modified;
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _context.Set<T>();
+            query = includes.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
+            return await query.ToListAsync();
         }
     }
 }

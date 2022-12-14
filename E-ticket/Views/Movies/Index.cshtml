@@ -7,15 +7,15 @@
 <div class="row">
     @foreach (var item in Model)
     {
-        <div class="col-md-4 col-xs-6 border-primary mb-3">
+        <div class="col-md-4 col-xs-6 border-primary mb-3" data-aos="zoom-in">
             <div class="card mb-3" style="max-width: 540px;">
                 <div class="row g-0">
                     <div class="col-md-12">
-                        <div class="card-header text-white bg-info">
+                        <div class="card-header text-white bg-warning">
                             <p class="card-text">
                                 <h5 class="card-title"> 
                                     @item.Name
-                                    <a class="text-white float-end"><i class="bi bi-pencil-square"></i></a>
+                                    <a class="text-white float-end" asp-action="Edit" asp-route-id="@item.Id"><i class="fa-solid fa-pen-to-square mx-2"></i></a>
                                 </h5>
                             </p>
                         </div>
@@ -23,8 +23,8 @@
                     <div class="col-md-6">
                         <img src="@item.ImageUrl" width="100%" alt="@item.Name">
                     </div>
-                    <div class="col-md-6">
-                        <div class="card-body">
+                    <div class="col-md-6 bg-dark text-white">
+                        <div class="card-body ">
                             <p class="card-text">@item.Description</p>                           
                             <p class="card-text"><b>Cinema: </b>@item.Cinema.Name</p>
                             <p class="card-text"><b>Category: </b>@item.MovieCategory</p>
@@ -48,11 +48,12 @@
 
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12 bg-dark">
                         <div class="card-footer ">
                            <p class="card-text">
-                                <a class="btn btn-outline-primary float-right"><i class="bi bi-cart-plus"></i>Add To Cart (Price @item.Price.ToString("c"))</a>
-                                <a class="btn btn-outline-secondary float-right"><i class="bi bi-eye-fill"></i>Show Details</a>             
+                                <a class="btn btn-outline-warning float-right" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@item.Id"><i class="bi bi-cart-plus"></i>Add To Cart (Price @item.Price.ToString("c"))</a>
+                                <a class="btn btn-outline-info float-right"asp-action="Details" asp-route-id="@item.Id">
+                                    <i class="bi bi-eye-fill"></i>Show Details</a>             
                            </p>
                         </div>
                     </div>
@@ -61,3 +62,5 @@
         </div>
     }
 </div>
+
+@await Html.PartialAsync("_CreateItem","Movies")

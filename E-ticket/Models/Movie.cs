@@ -1,9 +1,10 @@
 ﻿using E_ticket.Data.Enums;
+using E_ticket.Data.Repository;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace E_ticket.Models
 {
-    public class Movie
+    public class Movie:IEntityBase
     {
         public int Id { get; set; }
         public string Name{ get; set; }
