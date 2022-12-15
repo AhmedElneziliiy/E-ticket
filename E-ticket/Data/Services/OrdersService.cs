@@ -1,4 +1,5 @@
-﻿using E_ticket.Models;
+﻿using E_ticket.Data.Static;
+using E_ticket.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_ticket.Data.Services
@@ -13,17 +14,23 @@ namespace E_ticket.Data.Services
         }
 
 
-        public async Task<List<Order>> GetOrdersByUserIdAsync(string userId)
+
+        public async Task<List<Order>> GetOrdersByUserIdAndRoleAsync(string userId, string userRole)
         {
-            return await _context.Orders
-                .Include(oi => oi.OrderItems)
-                .ThenInclude(m => m.Movie)
-                .Where(u => u.UserId == userId).ToListAsync();
+            var orders = await _context.Orders.Include(n => n.OrderItems).ThenInclude(n => n.Movie).Include(n => n.User).ToListAsync();
+
+            if (userRole != "Admin")
+            {
+                orders = orders.Where(n => n.UserId == userId).ToList();
+            }
+
+            return orders;
         }
+
 
         public async Task StoreOrderAsync(List<ShoppingCartItem> items, string userId, string userEmailAddress)
         {
-            var order=new Order
+            var order = new Order
             {
                 UserId = userId,
                 Email = userEmailAddress

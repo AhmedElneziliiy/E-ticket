@@ -27,5 +27,6 @@ namespace E_ticket.Models
         [ForeignKey("ProducerId")]
         public int ProducerId { get; set; }
         public Producer Producer { get; set; }
+        //public object Order { get; internal set; }
     }
 }

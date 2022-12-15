@@ -1,0 +1,45 @@
+﻿@inject UserManager<ApplicationUser> UserManager;
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <a class="btn btn-outline-primary my-2 my-sm-0" asp-controller="Account" asp-action="Register">
+        <i class="fa-regular fa-registered"></i> Register
+    </a>
+
+    <a class="btn btn-outline-success my-2 my-sm-0" asp-controller="Account" asp-action="Login">
+        <i class="fa-light fa-right-to-bracket"></i> Log In
+    </a>
+}
+else
+{
+
+    <ul class="navbar-nav flex-grow-1">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-gear"></i> Hello @UserManager.GetUserName(User)
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" asp-controller="Orders" asp-action="Index"><i class="fa-solid fa-arrow-down-wide-short"></i>Orders</a></li>
+                @if (User.IsInRole(UserRoles.Admin))
+                {
+                    <li>
+                        <a class="dropdown-item" asp-controller="Account" asp-action="Users">
+                            <i class="fa-solid fa-person-circle-plus"></i>Users
+                        </a>
+                    </li>
+                }
+            </ul>
+        </li>
+    </ul>
+
+
+
+
+    <span style="padding: 5px;"></span>
+    <form asp-controller="Account" asp-action="Logout">
+        <button class="btn btn-outline-danger my-2 my-sm-0">
+            <i class="bi bi-box-arrow-in-right"></i> Log out
+        </button>
+    </form>
+}
+

@@ -1,5 +1,8 @@
 ﻿using E_ticket.Data.Enums;
+using E_ticket.Data.Static;
 using E_ticket.Models;
+using E_ticket.Models.Identity;
+using Microsoft.AspNetCore.Identity;
 using System;
 
 namespace E_ticket.Data
@@ -313,6 +316,55 @@ namespace E_ticket.Data
                 }
             }
 
+        }
+
+        public static async Task SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
+        {
+            using (var serviceScope=applicationBuilder.ApplicationServices.CreateScope())
+            {
+                //seeding roles
+                var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                if (!await roleManager.RoleExistsAsync(UserRoles.Admin))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+                }
+                if (!await roleManager.RoleExistsAsync(UserRoles.User))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+                }
+                //Seeding Admin
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var adminUser = await userManager.FindByEmailAsync("admin@admin.com");
+
+                if (adminUser is null)
+                {
+                    var newAdminUser = new ApplicationUser
+                    {
+                        FullName = "Admin User",
+                        UserName = "admin",
+                        Email = "admin@admin.com",
+                        EmailConfirmed = true,
+                    };
+                    await userManager.CreateAsync(newAdminUser, "Admin@123");
+                    await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin); //Add this user to Admin Role
+                }
+                //Seeding user
+
+                var user = await userManager.FindByEmailAsync("user@user.com");
+                if (user is null)
+                {
+                    var newUser = new ApplicationUser
+                    {
+                        FullName = "App User",
+                        UserName = "user",
+                        Email = "user@user.com",
+                        EmailConfirmed = true,
+                    };
+                    await userManager.CreateAsync(newUser, "Admin@123");
+                    await userManager.AddToRoleAsync(newUser, UserRoles.User); //Add this user to Admin Role
+                }
+
+            }
         }
     }
 }
