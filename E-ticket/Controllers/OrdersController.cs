@@ -67,7 +67,5 @@ namespace E_ticket.Controllers
             await _shoppingCart.ClearShoppingCartAsync();
             return View("OrderCompleted");
         }
-
-
     }
 }
